@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+    name: "{{ item.deploy_name }}"
+    labels:
+        app: "{{ item.deploy_name }}"
+spec:
+  replicas: "{{ item.replicas }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ item.deploy_name }}"
+    spec:
+      containers:
+      - image: "{{ item.image }}"
+        name: "{{ item.deploy_name }}"
+        env:
+        {% for item in item.env_vars %}
+            - name:  
+              value: 
+        {% endfor %}

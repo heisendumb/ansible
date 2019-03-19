@@ -1,0 +1,21 @@
+helm:
+      name: "{{ item.name }}"
+      namespace: "{{ item.group }}"
+      chart: 
+        name: "{{ item.image_name }}"
+        version: "{{ item.image_version }}"
+        source:
+            type:
+            location:
+      state: present
+
+      {% if item.value is defined and is not None %}
+
+      values: 
+      {% for key, value in item.value %}
+        
+        {{ key }}: {{ value }}
+      {% endfor %}
+      {% endif %}
+
+      host: "{{ item.hostname }}"
