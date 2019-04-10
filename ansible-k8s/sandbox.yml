@@ -1,0 +1,15 @@
+namespace: "gitlab"
+app_name: "gitlab-ci"
+number_replicas: 1
+
+apps:
+  - name: "{{app_name}}"
+    deploy_name: "{{app_name}}"
+    namespace: "{{namespace}}"
+    image: "{{app_name}}"
+    replicas: "{{number_replicas}}"
+    routes:
+      - name: "{{app_name}}"
+        hostname: "{{app_name}}-{{namespace}}"
+        port: "9200"
+        path: ""

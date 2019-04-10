@@ -1,0 +1,6 @@
+########### DEV ###########
+[k8s-dev]
+dev ansible_connection=local
+
+[k8s-dev:vars]
+region=dev

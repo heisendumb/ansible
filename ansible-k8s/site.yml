@@ -1,6 +1,6 @@
 ---
 - hosts: "{{ target }}"
-  
+
   vars:
       cpu:
         min: "100"
@@ -13,7 +13,10 @@
     - "{{ deploy_vars }}"
 
   tasks:
-    - name: "Criando namespace"
+    - name: "Criando Projeto."
       include_role:
         name: kubernetes_create_namespace
-    
+      with_items: "{{ apps }}"
+      vars:
+        included_variable: "{{ item }}"
+ 
