@@ -13,7 +13,7 @@
     - "{{ deploy_vars }}"
 
   tasks:
-    - name: "Criando projeto"
+    - name: "Criando namespace"
       include_role:
         name: kubernetes_create_namespace
     
