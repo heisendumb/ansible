@@ -1,2 +1,19 @@
 ---
-# tasks file for kubernetes_create_app
+- name: "Capturando Deployment: {{ item.deploy_name }}"
+  command: "kubectl get deployments -o json -n {{ item.namespace }}"
+  register: deployment_global
+
+- name: "New-app: {{item.group}}/{{item.deploy_name}}"
+  helm:
+    host: localhost
+    chart:
+      name: 
+      version:  
+    source:
+      type:
+      location:
+    state: present
+    name: "{{ item.deploy_name }}"
+    namespace: "{{ item.namespace }}"
+  register: new_app_true
+  when: "(item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.name') and (item.helm is definied) and (item.helm == True))"
