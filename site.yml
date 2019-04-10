@@ -1,1 +1,4 @@
 ---
+- roles:
+    - kubernetes_create_namespace
+    

@@ -1,7 +1,12 @@
 ---
-- name: "Criando namespace: {{ item.group }}"
-  k8s:
-    name: {{ item.group }}
-    api_version: v1
-    kind: Namespace
-    state: present
+- name: "Verificando se o namespace {{ item.namespace }} existe"
+  command: "kubectl get namespaces -o go-template --template '{{range.items}}{{.metadata.name}}{{"\n"}}{{end}}'"
+  regiter: namespace_list
+
+- name: Debug namespace_list
+  debug:
+    var: namespace_list
+    
+#- name: "Criando namespace: {{ item.namespace }}"
+#  command: "kubectl create namespace {{ item.namespace }}"
+#  when: 

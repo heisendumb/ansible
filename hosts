@@ -1,0 +1,7 @@
+---------------------- LOCALHOST ----------------------
+[local]
+localhost ansible_connection=local
+
+[local:vars]
+url=''
+token=''
