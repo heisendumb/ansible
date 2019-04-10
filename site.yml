@@ -1,4 +1,19 @@
 ---
-- roles:
-    - kubernetes_create_namespace
+- hosts: "{{ target }}"
+  
+  vars:
+      cpu:
+        min: "100"
+        max: "200"
+      memory:
+        min: "100"
+        max: "256"
+
+  vars_files:
+    - "{{ deploy_vars }}"
+
+  tasks:
+    - name: "Criando projeto"
+      include_role:
+        name: kubernetes_create_namespace
     
