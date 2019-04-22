@@ -2,12 +2,12 @@
 - hosts: "{{ target }}"
 
   vars:
-      cpu:
-        min: "100"
-        max: "200"
-      memory:
-        min: "100"
-        max: "256"
+    cpu:
+      min: "100"
+      max: "200"
+    memory:
+      min: "100"
+      max: "256"
 
   vars_files:
     - "{{ deploy_vars }}"
@@ -19,4 +19,10 @@
       with_items: "{{ apps }}"
       vars:
         included_variable: "{{ item }}"
- 
+
+    - name: "Criando App."
+      include_role:
+        name: kubernetes_create_app
+      with_items: "{{ apps }}"
+      vars:
+        included_variable: "{{ item }}"

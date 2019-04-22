@@ -1,5 +1,5 @@
-namespace: "gitlab"
-app_name: "gitlab-ci"
+namespace: "mediawiki"
+app_name: "mediawiki"
 number_replicas: 1
 
 apps:
@@ -8,8 +8,7 @@ apps:
     namespace: "{{namespace}}"
     image: "{{app_name}}"
     replicas: "{{number_replicas}}"
-    routes:
-      - name: "{{app_name}}"
-        hostname: "{{app_name}}-{{namespace}}"
-        port: "9200"
-        path: ""
+    helm: True
+    pkg_name: "mediawiki"
+    pkg_version: "6.2.0"
+    chart_url: "https://kubernetes-charts.storage.googleapis.com"
