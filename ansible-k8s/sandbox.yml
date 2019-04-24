@@ -1,11 +1,11 @@
-namespace: "mediawiki"
+group: "mediawiki"
 app_name: "mediawiki"
 number_replicas: 1
 
 apps:
   - name: "{{app_name}}"
     deploy_name: "{{app_name}}"
-    namespace: "{{namespace}}"
+    namespace: "{{group}}"
     image: "{{app_name}}"
     replicas: "{{number_replicas}}"
     helm: True

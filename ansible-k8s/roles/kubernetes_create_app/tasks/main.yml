@@ -3,7 +3,7 @@
   command: "kubectl get deployments -o json -n {{ item.namespace }}"
   register: dc_global
 
-- name: "New app: {{item.group}}/{{item.deploy_name}}"
+- name: "New-app: {{ item.namespace }}/{{ item.deploy_name }}"
   helm:
     host: localhost
     chart:
@@ -16,4 +16,16 @@
     name: "{{ item.deploy_name }}"
     namespace: "{{ item.namespace }}"
   register: new_app_true
-  when: "(item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.name'))"
+  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.name')) and ('helm' in item.keys()) and (item.helm == True)
+
+- name: "Template DC para new app: {{ item.namespace }}/{{ item.deploy_name}}"
+  template:
+    src: DeploymentConfig.j2
+    dest: DeploymentConfig.yml
+  when: "(item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.name')) and (item.helm == False)"
+
+- name: "Create"
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'DeploymentConfig.yml') | from_yaml }}"
+  when: "(item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.name')) and (('helm' not item.keys()) or (item.helm == False))"

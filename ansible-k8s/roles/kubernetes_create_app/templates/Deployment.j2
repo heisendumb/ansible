@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Deployment
+metadata:
+    label:
+        app: "{{ item.deploy_name }}" 
+    name: "{{ item.deploy_name }}"
+    namespace: "{{ item.group }}"
+spec:
+  {% if item.replicas is defined %}
+      
+    replicas: "{{ item.replicas }}"
+  {% else %}
+      
+    replicas: 1
+  {% endif %}
+    
+    strategy:
+        type: "Rolling"
+    selector:
+        app: "{{ item.deploy_name }}" 
+    template:
+        metadata:
+            labels:
+                app: "{{ item.deploy_name }}"
+        spec:
+            containers:
+                - name: "{{ item.deploy_name }}"
+                  image: {{ item.image }}
+                  imagePullPolicy: Always
+                  {% if item.env_vars is not none %}
+
+                  env:
+                  {% for key in item.env_vars %}
+                  
+                    - name: {{ key.split("=", 1)[0] }}
+                      value: {{ key.split("=", 1)[1] }}                
+                  {% endfor %}
+                  {% endif %}
+
+                  {% if item.routes is defined %}
+
+                  {% if item.routes is not none %}
+
+                  ports:
+                  {% for key in item.routes %}
+                  {% if key.port is not none %}
+
+                     - containerPort: {{ key.port }}
+                       protocol: TCP
+                  {% endif %}
+                  {% endfor %}
+                  {% endif %}
+                  {% endif %}
+
+                  resources:
+                    {% if 'cpu' in item.keys() %}
+        
+                    limits:
+                      cpu: {{ item.cpu.max }}
+                      memory: {{ item.memory.max }}
+                    requests:
+                       cpu: {{ item.cpu.min }}
+                       memory: {{ item.memory.min }}
+                    {% else %}
+                    
+                    limits:
+                      cpu: {{ cpu.max }}m
+                      memory: {{ memory.max }}Mi
+                    requests:
+                       cpu: {{ cpu.min }}m
+                       memory: {{ memory.min }}Mi
+                    {% endif %}
