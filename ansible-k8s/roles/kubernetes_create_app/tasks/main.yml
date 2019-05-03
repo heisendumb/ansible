@@ -17,17 +17,20 @@
       changed_when: false
 
     - name: "New-srv: {{ item.namespace }}/{{ item.deploy_name }}"
-      helm:
-        host: localhost
-        chart:
-          name: "{{ item.pkg_name }}"
-          version: "{{ item.pkg_version }}"
-          source:
-            type: repo
-            location: "{{ item.chart_url}}"
-        state: present
-        name: "{{ item.deploy_name }}"
-        namespace: "{{ item.namespace }}"
+      shell: |
+        helm del --purge {{ item.deploy_name }}
+        helm install stable/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }} 
+      #helm:
+      #  host: localhost
+      #  chart:
+      #    name: "{{ item.pkg_name }}"
+      #    version: "{{ item.pkg_version }}"
+      #    source:
+      #      type: repo
+      #      location: "{{ item.chart_url}}"
+      #  state: present
+      #  name: "{{ item.deploy_name }}"
+      #  namespace: "{{ item.namespace }}"
 
   always:
     - name: tear down the tunnel to tiller
