@@ -1,4 +1,4 @@
-FROM kubectl-image-withdocker
+FROM docker.io/bitnami/kubectl:latest
 
 LABEL maintainer="Guilherme Albuquerque "heisenbuggerr""
 

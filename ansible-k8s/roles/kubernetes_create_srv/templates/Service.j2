@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: "{{ item.deploy_name }}"
+    namespace: "{{ item.group }}"
+    labels:
+        app: "{{ item.deploy_name }}"
+spec:
+    selector:
+        app: "{{ item.deploy_name }}"
+
+    {% if (item.routes is defined and item.routes is not none) %}
+    
+    ports:
+        {% if item.routes[0] is not none %}
+
+        - protocol: TCP
+          targetPort: {{ item.routes[0].port }}
+          name: "{{ item.routes[0].port }}-tcp"
+          port: {{ item.routes[0].port }}
+        {% endif %}
+    {% endif %}
