@@ -1,0 +1,14 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: {{ item.deploy_name }}
+  namespace: {{ item.namespace }}
+spec:
+  rules:
+    - host: {{ route.hostname }}
+      http:
+        paths:
+          - path: 
+            backend:
+              serviceName: {{ route.name }}
+servicePort: {{ route.port }}
