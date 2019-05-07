@@ -1,2 +1,7 @@
 ---
-# tasks file for kubernetes_create_route
+- name: "Capturando Ingress: {{ item.namespace }}"
+  shell: "kubectl get ing  -o json -n {{ item.namespace }}"
+  register: ingresses
+
+- name: "Capturando Service:  {{ item.namespace }}"
+  shell: "kubectl get svc -o json -n {{ item.namespace }}"

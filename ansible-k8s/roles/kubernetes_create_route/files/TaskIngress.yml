@@ -1,0 +1,10 @@
+- name: "Template Rotas"
+  template:
+    src: CreateIngress.j2
+    dest: CreateIngress.yml
+
+- name: "Criando Rotas: {{ routes.name }}"
+  k8s:
+    api_key: "{{ token }}"
+    state: present
+    definition: "{{ lookup('file', 'CreateIngress.yml') | from_yaml }}"
