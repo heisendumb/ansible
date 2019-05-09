@@ -1,6 +1,6 @@
 ---
 - name: "Capturando Deployment: {{ item.deploy_name }}"
-  command: "kubectl get deployments -o json -n {{ item.namespace }}"
+  shell: "kubectl get deployments -o json -n {{ item.namespace }}"
   register: dc_global
 
 - set_fact:
@@ -19,7 +19,7 @@
     - name: "New-srv: {{ item.namespace }}/{{ item.deploy_name }}"
       shell: |
         helm del --purge {{ item.deploy_name }}
-        helm install stable/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }} 
+        helm install stable/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }}
       #helm:
       #  host: localhost
       #  chart:
@@ -52,4 +52,5 @@
   k8s:
     state: present
     definition: "{{ lookup('file', 'DeploymentConfig.yml') | from_yaml }}"
+  register: new_app_true
   when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.name')) and ('helm' in item.keys()) and (item.helm == False)

@@ -1,8 +1,12 @@
 ---
 - name: "Verificando se o namespace {{ item.namespace }} existe"
-  command: 'kubectl get --no-headers=true namespaces -o custom-columns=:metadata.name'
+  shell: "kubectl get --no-headers=true namespaces -o custom-columns=:metadata.name"
   register: namespace_list
 
 - name: "Create namespace: {{ item.namespace }}"
-  command: "kubectl create namespace {{ item.namespace }}"
+  k8s:
+    name: "{{ item.namespace }}"
+    api_version: v1
+    kind: Namespace
+    state: present
   when: "(item.namespace not in namespace_list.stdout_lines|list)"

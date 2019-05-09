@@ -1,2 +1,10 @@
 ---
-# tasks file for kubernetes_create_pv
+- name: "Template SVC"
+  template:
+    src: CreatePersistentVolume.j2
+    dest: CreatePersistentVolume.yml
+
+- name: "Criando SVC: {{item.deploy_name}}"
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'CreatePersistentVolume.yml') | from_yaml }}"

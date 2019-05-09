@@ -1,7 +1,19 @@
 ---
 - name: "Capturando Ingress: {{ item.namespace }}"
-  shell: "kubectl get ing  -o json -n {{ item.namespace }}"
+  shell: "kubectl get ing -o json -n {{ item.namespace }}"
   register: ingresses
 
-- name: "Capturando Service:  {{ item.namespace }}"
-  shell: "kubectl get svc -o json -n {{ item.namespace }}"
+- name: "Capturando a uma lista com todos os serviços no:  {{ item.namespace }}"
+  k8s_facts:
+    api_version: v1
+    kind: Service
+    namespace: "{{ item.namespace }}"
+  register: svc_list
+
+- name: "Selecionando SVC especifico: {{ item.namespace }}/{{ item.deploy_name }}"
+  k8s_facts:
+    api_version: v1
+    kind: Service
+    name: "{{ item.deploy_name }}"
+    namespace: "{{ item.namespace }}"
+  register: especific_svc
