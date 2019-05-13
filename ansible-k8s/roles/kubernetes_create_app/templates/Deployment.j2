@@ -52,21 +52,34 @@ spec:
                   {% endif %}
                   {% endif %}
 
-                  resources:
-                    {% if 'cpu' in item.keys() %}
-        
+                  resources:        
                     limits:
+                      {% if 'cpu' in item.keys() %}
+
                       cpu: {{ item.cpu.max }}
-                      memory: {{ item.memory.max }}
-                    requests:
-                       cpu: {{ item.cpu.min }}
-                       memory: {{ item.memory.min }}
-                    {% else %}
-                    
-                    limits:
+                      {% else %}
+
                       cpu: {{ cpu.max }}m
+                      {% endif %}
+                      {% if 'memory' in item.keys() %}
+
+                      memory: {{ item.memory.max }}
+                      {% else %}
+
                       memory: {{ memory.max }}Mi
+                      {% endif %}
                     requests:
-                       cpu: {{ cpu.min }}m
-                       memory: {{ memory.min }}Mi
-                    {% endif %}
+                      {% if 'cpu' in item.keys() %}
+                      
+                      cpu: {{ item.cpu.min }}
+                      {% else %}
+
+                      cpu: {{ cpu.min }}m
+                      {% endif %}
+                      {% if 'memory' in item.keys() %}
+
+                      memory: {{ item.memory.min }}
+                      {% else %}
+
+                      memory: {{ memory.min }}Mi
+                      {% endif %}
