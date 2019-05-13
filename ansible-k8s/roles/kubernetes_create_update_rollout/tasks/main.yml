@@ -6,7 +6,3 @@
 - name: "Atualizando imagem no deployment: {{ item.namespace}}/{{ item.deploy_name }}"
   shell: "kubectl set image deploymeny/{{ item.deploy_name }} {{ item.deploy_name }}={{ item.image }}"
   when: "(item.deploy_name in dc_global.stdout|from_json|json_query('items[*].metadata.name'))"
-
-- name: "Aplicando modificacoes: {{ item.namespace }}/{{ item.deploy_name }}"
-  shell: ""
-  when: "(item.deploy_name in dc_global.stdout|from_json|json_query('items[*].metadata.name'))"
