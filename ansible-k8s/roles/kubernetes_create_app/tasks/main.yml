@@ -19,7 +19,7 @@
     - name: "New-srv: {{ item.namespace }}/{{ item.deploy_name }}"
       shell: |
         helm del --purge {{ item.deploy_name }}
-        helm install stable/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }}
+        helm install {{item.repo_name}}/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }}
       #helm:
       #  host: localhost
       #  chart:
