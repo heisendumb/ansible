@@ -12,4 +12,11 @@ apps:
     chart: "https://kubernetes-charts.storage.googleapis.com"
     repo: "stable"
     env_vars:
-    route:
+    routes:
+      - name: "{{app_name}}"
+        hostname: "{{ app_name }}"
+        port: "443"
+        path: ""
+        certificate: ""
+        external: True
+

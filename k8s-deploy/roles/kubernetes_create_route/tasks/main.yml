@@ -1,7 +1,7 @@
 ---
 - name: "Capturando Ingress: {{ item.namespace }}"
   shell: "kubectl get ing -o json -n {{ item.namespace }}"
-  register: ingresses
+  register: route
 
 - name: "Capturando a uma lista com todos os serviços no:  {{ item.namespace }}"
   k8s_facts:
@@ -17,15 +17,25 @@
     namespace: "{{ item.namespace }}"
   register: specific_svc
 
-- name: "Debug srv variable"
-  debug:
-    var: specific_svc
-
 - name: "Verificando portas expostas"
   fail:
-    msg: "Porta {{ route.port }} nao exposta!!!"
-  when: "(routes.port|int not in specific_svc.result|json_query('spec.ports[*].port'))"
+    msg: "Porta {{ routes.port }} nao exposta!!!"
+  when: "(routes.port|int not in specific_svc|json_query('resources[*].spec.ports[*].port') and item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app'))"
   with_items: "{{ item.routes }}"
   loop_control:
     loop_var: routes
+
+
+- name: "Template rota: {{ routes.name }}"
+  template:
+    src: CreateIngress.j2
+    dest: CreateIngress.j2
+  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app'))
+
+- name: "Criando rota: {{ routes.name }}"
+  k8s:
+    state: present
+    definition: "{{ lookup('file', 'CreateIngress.j2') | from_yaml }}"
+  register: new_app_true
+  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app' and routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))
 
