@@ -18,7 +18,7 @@
 
     - name: "New-srv: {{ item.namespace }}/{{ item.deploy_name }}"
       shell: |
-        helm install {{item.repo_name}}/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }} {% if ('helm' in item.keys()) and (item.env_vars is not none) %} -f {{ item.env_vars }} {% endif %}
+        helm install {{ item.repo }}/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }} {% if ('helm' in item.keys()) and (item.env_vars is not none) %} -f {{ item.env_vars }} {% endif %}
       #helm:
       #  host: localhost
       #  chart:
@@ -39,17 +39,17 @@
       args:
         removes: "{{ tun_pid_file }}"
       changed_when: false
-  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.name')) and ('helm' in item.keys()) and (item.helm == True)
+  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and ('helm' in item.keys()) and (item.helm == True)
 
 - name: "Template DC para new app: {{ item.namespace }}/{{ item.deploy_name}}"
   template:
     src: DeploymentConfig.j2
     dest: DeploymentConfig.yml
-  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.name')) and ('helm' in item.keys()) and (item.helm == False)
+  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and ('helm' in item.keys()) and (item.helm == False)
 
 - name: "New-app: {{ item.namespace }}/{{ item.deploy_name }}"
   k8s:
     state: present
     definition: "{{ lookup('file', 'DeploymentConfig.yml') | from_yaml }}"
   register: new_app_true
-  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.name')) and ('helm' in item.keys()) and (item.helm == False)
+  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and ('helm' in item.keys()) and (item.helm == False)

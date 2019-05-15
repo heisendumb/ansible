@@ -34,3 +34,10 @@
       vars:
         included_variable: "{{ item }}"
       when: ('helm' not in item.keys())
+
+    - name: "Criando rota"
+      include_role:
+        name: kubernetes_create_route
+      with_items: "{{ apps }}"
+      vars:
+        included_variable: "{{ item }}"

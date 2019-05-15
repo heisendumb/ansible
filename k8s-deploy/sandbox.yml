@@ -7,9 +7,9 @@ apps:
     deploy_name: "{{app_name}}"
     namespace: "{{group}}"
     replicas: "{{number_replicas}}"
-    helm:
-      - name: "mediawiki"
-        version: "6.2.0"
-        chart: "https://kubernetes-charts.storage.googleapis.com"
-    env_vars: "values.yml"
+    helm: true
+    version: "6.2.0"
+    chart: "https://kubernetes-charts.storage.googleapis.com"
+    repo: "stable"
+    env_vars:
     route:
