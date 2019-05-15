@@ -18,8 +18,7 @@
 
     - name: "New-srv: {{ item.namespace }}/{{ item.deploy_name }}"
       shell: |
-        helm del --purge {{ item.deploy_name }}
-        helm install {{item.repo_name}}/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }}
+        helm install {{item.repo_name}}/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }} {% if ('helm' in item.keys()) and (item.env_vars is not none) %} -f {{ item.env_vars }} {% endif %}
       #helm:
       #  host: localhost
       #  chart:

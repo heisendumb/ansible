@@ -13,16 +13,24 @@
     - "{{ deploy_vars }}"
 
   tasks:
-    - name: "Criando Projeto."
+    - name: "Criando Projeto"
       include_role:
         name: kubernetes_create_namespace
       with_items: "{{ apps }}"
       vars:
         included_variable: "{{ item }}"
 
-    - name: "Criando App."
+    - name: "Criando App"
       include_role:
         name: kubernetes_create_app
       with_items: "{{ apps }}"
       vars:
         included_variable: "{{ item }}"
+
+    - name: "Criando SRV"
+      include_role:
+        name: kubernetes_create_srv
+      with_items: "{{ apps }}"
+      vars:
+        included_variable: "{{ item }}"
+      when: ('helm' not in item.keys())
