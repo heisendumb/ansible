@@ -5,6 +5,7 @@
 
 - name: "Capturando a uma lista com todos os serviços: {{ item.namespace }}"
   k8s_facts:
+    api_key: "{{ token }}"
     api_version: v1
     kind: Service
     namespace: "{{ item.namespace }}"
