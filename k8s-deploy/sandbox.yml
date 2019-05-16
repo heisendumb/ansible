@@ -13,7 +13,7 @@ apps:
     repo: "stable"
     env_vars:
     routes:
-      - name: "{{app_name}}"
+      - name: "{{ app_name }}"
         hostname: "{{ app_name }}"
         port: "443"
         path: ""

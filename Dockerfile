@@ -1,10 +1,10 @@
 FROM docker.io/bitnami/kubectl:latest
 
-LABEL maintainer="Guilherme Albuquerque "heisenbuggerr""
+LABEL maintainer="Guilherme Albuquerque "heisendumb""
 
 WORKDIR /ansible-deploy
 
-ADD ./ansible-k8s /ansible-deploy
+COPY ./ansible-k8s /ansible-deploy
 
 RUN mkdir /etc/ansible \
     && mv /ansible-deploy/ansible.cfg /etc/ansible/

@@ -5,10 +5,9 @@ metadata:
   namespace: {{ item.namespace }}
 spec:
   rules:
-    - host: {{ route.hostname }}
-      http:
+    - http:
         paths:
           - path: 
             backend:
               serviceName: {{ route.name }}
-servicePort: {{ route.port }}
+              servicePort: {{ route.port }}
