@@ -53,3 +53,13 @@
     definition: "{{ lookup('file', 'DeploymentConfig.yml') | from_yaml }}"
   register: new_app_true
   when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and ('helm' in item.keys()) and (item.helm == False)
+
+- name: "Capturando Deployment - Helm: {{ item.deploy_name }}-{{ item.deploy_name }}"
+  shell: "kubectl get deployments/{{ item.deploy_name }}-{{ item.deploy_name }} -o json -n {{ item.namespace }}"
+  register: dc_app
+  when: ('helm' in item.keys()) and (item.helm == False)
+
+- name: "Capturando Deployment: {{item.deploy_name}}"
+  shell: "kubectl get deployments/{{ item.deploy_name }} -o json -n {{ item.namespace }}"
+  register: dc_app
+
