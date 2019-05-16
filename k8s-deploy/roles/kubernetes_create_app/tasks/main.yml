@@ -57,7 +57,7 @@
 - name: "Capturando Deployment - Helm: {{ item.deploy_name }}-{{ item.deploy_name }}"
   shell: "kubectl get deployments/{{ item.deploy_name }}-{{ item.deploy_name }} -o json -n {{ item.namespace }}"
   register: dc_app
-  when: ('helm' in item.keys()) and (item.helm == False)
+  when: ('helm' in item.keys()) and (item.helm == True)
 
 - name: "Capturando Deployment: {{item.deploy_name}}"
   shell: "kubectl get deployments/{{ item.deploy_name }} -o json -n {{ item.namespace }}"
