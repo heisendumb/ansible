@@ -4,15 +4,19 @@
 
 ```
 namespace: "teste"
-app_name: "elasticsearch"
-number_replicas: 2
+app_name: "test"
+number_replicas: 1
 
 apps:
   - name: "{{app_name}}"
     deploy_name: "{{app_name}}"
     group: "{{namespace}}"
     image: "{{app_name}}"
+    helm: "False/True"
     replicas: "{{number_replicas}}" # opcional
+    version: "" # when helm is True
+    chart: "" # when helm is True
+    repo: "" # when helm is True
     routes:
       - name: "{{app_name}}"
         hostname: "{{app_name}}-{{namespace}}"
