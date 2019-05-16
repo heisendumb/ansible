@@ -1,2 +1,7 @@
 ---
-# tasks file for kubernetes_login
+- name: "Login Docker registry: {{ docker_registry }}"
+  docker_login:
+    registry: "{{ docker_registry }}"
+    username: "{{ registry_username }}"
+    password: "{{ registry_token }}"
+  when: docker_registry is defined 

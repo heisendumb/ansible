@@ -7,7 +7,7 @@ apps:
     deploy_name: "{{app_name}}"
     namespace: "{{group}}"
     replicas: "{{number_replicas}}"
-    helm: true
+    helm: True
     version: "6.2.0"
     chart: "https://kubernetes-charts.storage.googleapis.com"
     repo: "stable"

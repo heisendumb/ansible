@@ -13,6 +13,11 @@
     - "{{ deploy_vars }}"
 
   tasks:
+    - name: "Acessando docker registry"
+      include_role:
+        name: kubernetes_login
+      when: docker_registry is defined
+    
     - name: "Criando Projeto"
       include_role:
         name: kubernetes_create_namespace
