@@ -20,7 +20,7 @@
 - name: "Verificando portas expostas"
   fail:
     msg: "Porta {{ routes.port }} nao exposta!!!"
-  when: "(routes.port|int not in specific_svc|json_query('resources[*].spec.ports[*].port') and item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app'))"
+  when: "(routes.port|int not in specific_svc|json_query('resources[*].spec.ports[*].port') and item.deploy_name not in dc_app.stdout|from_json|json_query('items[*].metadata.labels.app'))"
   with_items: "{{ item.routes }}"
   loop_control:
     loop_var: routes
@@ -30,12 +30,12 @@
   template:
     src: CreateIngress.j2
     dest: CreateIngress.j2
-  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app'))
+  when: (item.deploy_name not in dc_app.stdout|from_json|json_query('items[*].metadata.labels.app'))
 
 - name: "Criando rota: {{ routes.name }}"
   k8s:
     state: present
     definition: "{{ lookup('file', 'CreateIngress.j2') | from_yaml }}"
   register: new_app_true
-  when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app' and routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))
+  when: (item.deploy_name not in dc_app.stdout|from_json|json_query('items[*].metadata.labels.app' and routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))
 
