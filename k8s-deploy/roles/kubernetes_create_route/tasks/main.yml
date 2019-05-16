@@ -3,7 +3,7 @@
   shell: "kubectl get ing -o json -n {{ item.namespace }}"
   register: route
 
-- name: "Capturando a uma lista com todos os serviços no:  {{ item.namespace }}"
+- name: "Capturando a uma lista com todos os serviços: {{ item.namespace }}"
   k8s_facts:
     api_version: v1
     kind: Service
@@ -12,6 +12,7 @@
 
 - name: "Selecionando SVC especifico: {{ item.namespace }}/{{ item.deploy_name }}"
   k8s_facts:
+    api_key: "{{ token }}"
     api_version: v1
     kind: Service
     namespace: "{{ item.namespace }}"
@@ -20,7 +21,7 @@
 - name: "Verificando portas expostas"
   fail:
     msg: "Porta {{ routes.port }} nao exposta!!!"
-  when: "(routes.port|int not in specific_svc|json_query('resources[*].spec.ports[*].port') and item.deploy_name not in dc_app.stdout|from_json|json_query('items[*].metadata.labels.app'))"
+  when: "(routes.port|int not in specific_svc|json_query('resources[*].spec.ports[*].port') and item.deploy_name not in dc_app.stdout|from_json|json_query('metadata.labels.app'))"
   with_items: "{{ item.routes }}"
   loop_control:
     loop_var: routes
