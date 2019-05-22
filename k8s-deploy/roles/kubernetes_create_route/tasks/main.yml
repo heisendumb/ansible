@@ -37,20 +37,20 @@
 #  loop_control:
 #    loop_var: routes
 
-- name: "Template rota: {{ routes.name }}"
-  template:
-    src: CreateIngress.j2
-    dest: CreateIngress.j2
-  when: (item.deploy_name in dc_app.stdout|from_json|json_query('metadata.labels.app') and routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))
-  with_items: "{{ item.routes }}"
-  loop_control:
-    loop_var: routes
+#- name: "Template rota: {{ routes.name }}"
+#  template:
+#    src: CreateIngress.j2
+#    dest: CreateIngress.j2
+#  when: (item.deploy_name in dc_app.stdout|from_json|json_query('metadata.labels.app') and routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))
+#  with_items: "{{ item.routes }}"
+#  loop_control:
+#    loop_var: routes
 
-- name: "Criando rota: {{ routes.name }}"
-  k8s:
-    state: present
-    definition: "{{ lookup('file', 'CreateIngress.j2') | from_yaml }}"
-  when: (item.deploy_name in dc_app.stdout|from_json|json_query('metadata.labels.app') and routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))
-  with_items: "{{ item.routes }}"
-  loop_control:
-    loop_var: routes
+#- name: "Criando rota: {{ routes.name }}"
+#  k8s:
+#    state: present
+#    definition: "{{ lookup('file', 'CreateIngress.j2') | from_yaml }}"
+#  when: (item.deploy_name in dc_app.stdout|from_json|json_query('metadata.labels.app') and routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))
+#  with_items: "{{ item.routes }}"
+#  loop_control:
+#    loop_var: routes
