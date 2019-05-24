@@ -4,4 +4,4 @@
     registry: "{{ docker_registry }}"
     username: "{{ registry_username }}"
     password: "{{ registry_token }}"
-  when: docker_registry is defined 
+  when: docker_registry is defined
