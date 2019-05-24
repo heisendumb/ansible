@@ -3,10 +3,6 @@
   shell: "kubectl get deployments -o json -n {{ item.namespace }}"
   register: dc_global
 
-- name: "Debug var"
-  debug:
-    var: dc_global.stdout
-
 - set_fact:
     tun_pid_file: /tmp/helm_pid
 
@@ -45,6 +41,10 @@
       changed_when: false
   when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and ('helm' in item.keys()) and (item.helm == True)
 
+- name: "Debug"
+  debug:
+    var: new_app_true
+
 - name: "Template DC para new app: {{ item.namespace }}/{{ item.deploy_name}}"
   template:
     src: DeploymentConfig.j2
@@ -67,4 +67,3 @@
   shell: "kubectl get deployments/{{ item.deploy_name }}-{{ item.deploy_name }} -o json -n {{ item.namespace }}"
   register: dc_app
   when: ('helm' in item.keys()) and (item.helm == True)
-
