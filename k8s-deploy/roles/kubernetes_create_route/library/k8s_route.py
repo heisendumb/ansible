@@ -3,15 +3,15 @@ import json
 
 module = AnsibleModule(
     argument_spec={
-        'services': {'required': True, 'type': 'json'},
+        'services': {'required': True, 'type': 'dict'},
         'appname': {'required': True, 'type': 'str'}
     }
 )
 
 result = {}
 
-for item in (json.loads(json.loads(module.params['services']).get('resources'))):
-    if item['metadata']['name'] == module.params['appname']:
+for item in module.params['services'].get('resources'):
+    if item['metadata']['labels']['app'] == module.params['appname']:
         result = item
 
 module.exit_json(changed=False, result=result)
