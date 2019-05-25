@@ -1,0 +1,48 @@
+---
+- hosts: "{{ target }}"
+
+  vars:
+    cpu:
+      min: "100"
+      max: "200"
+    memory:
+      min: "100"
+      max: "256"
+
+  vars_files:
+    - "{{ deploy_vars }}"
+
+  tasks:
+    - name: "Acessando docker registry"
+      include_role:
+        name: kubernetes_login
+      when: docker_registry is defined
+
+    - name: "Criando Projeto"
+      include_role:
+        name: kubernetes_create_namespace
+      with_items: "{{ apps }}"
+      vars:
+        included_variable: "{{ item }}"
+
+    - name: "Criando App"
+      include_role:
+        name: kubernetes_create_app
+      with_items: "{{ apps }}"
+      vars:
+        included_variable: "{{ item }}"
+
+    - name: "Criando SRV"
+      include_role:
+        name: kubernetes_create_srv
+      with_items: "{{ apps }}"
+      vars:
+        included_variable: "{{ item }}"
+      when: ('helm' not in item.keys())
+
+    - name: "Criando rota"
+      include_role:
+        name: kubernetes_create_route
+      with_items: "{{ apps }}"
+      vars:
+        included_variable: "{{ item }}"
