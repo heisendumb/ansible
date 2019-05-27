@@ -2,6 +2,8 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: "{{ item.pv_name }}"
+  labels:
+    app: {{ item.pv_name }}
 spec:
   capacity:
     storage: "{{ item.pv_size }}"
