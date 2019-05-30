@@ -6,7 +6,7 @@ metadata:
     app: {{ item.pv_name }}
 spec:
   capacity:
-    storage: "{{ item.pv_size }}"
+    storage: "{{ item.pv_size }}Gi"
   accessModes:
     - "{{ item.pv_acess_mode }}"
   storageClassName: "{{ item.pv_name }}"

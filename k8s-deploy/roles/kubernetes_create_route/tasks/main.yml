@@ -1,6 +1,6 @@
 ---
 - name: "Capturando Ingress: {{ item.namespace }}"
-  shell: "kubectl get ing -o json -n {{ item.namespace }}"
+  command: "kubectl get ing -o json -n {{ item.namespace }}"
   register: route
 
 - name: "Capturando a uma lista com todos os serviços: {{ item.namespace }}"

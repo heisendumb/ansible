@@ -1,16 +1,16 @@
 ---
 - name: "Capturando as variaveis: {{ item.namespace }}/{{ item.deploy_name }}"
-  shell: "kubectl set env deployments/{{ item.deploy_name }} --list --namespace {{ item.namespace }}"
+  command: "kubectl set env deployments/{{ item.deploy_name }} --list --namespace {{ item.namespace }}"
   register: env
 
 - name: "Capturando DC: {{ item.namespace }}/{{ item.deploy_name }}"
-  shell: "kubectl get deployment -o json --namespace {{ item.namespace }}"
+  command: "kubectl get deployment -o json --namespace {{ item.namespace }}"
   register: dc_global
 
 - name: "Removendo as variaveis"
-  shell: "kubectl set env deployments/{{item.deploy_name}} {{env.stdout_lines[1:]|join('\n')|regex_replace('=.+?(\n|$)', '- ')}} --namespace {{item.group}}"
+  command: "kubectl set env deployments/{{item.deploy_name}} {{env.stdout_lines[1:]|join('\n')|regex_replace('=.+?(\n|$)', '- ')}} --namespace {{item.group}}"
   when: "(env.stdout_lines[1:]|length != 0) and (item.group in project_global|list) and (item.deploy_name in dc_global.stdout|from_json|json_query('items[*].metadata.name'))"
 
 - name: "Atualizando as variaveis: {{ item.namespace }}/{{ item.deploy_name }}"
-  shell: "kubectl set env deployments/{{item.deploy_name}} {{item.env_vars|join(' ')}} --namespace {{ item.namespace }}"
+  command: "kubectl set env deployments/{{item.deploy_name}} {{item.env_vars|join(' ')}} --namespace {{ item.namespace }}"
   when: "(item.group in project_global|list) and (item.deploy_name in dc_global.stdout|from_json|json_query('items[*].metadata.name'))"

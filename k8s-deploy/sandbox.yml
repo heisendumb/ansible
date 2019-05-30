@@ -3,15 +3,19 @@ app_name: "mediawiki"
 number_replicas: 1
 
 apps:
-  - name: "{{app_name}}"
-    deploy_name: "{{app_name}}"
-    namespace: "{{group}}"
-    replicas: "{{number_replicas}}"
+  - name: "{{ app_name }}"
+    deploy_name: "{{ app_name }}"
+    namespace: "{{ group }}"
+    replicas: "{{ number_replicas }}"
     helm: True
     version: "6.2.0"
     chart: "https://kubernetes-charts.storage.googleapis.com"
     repo: "stable"
     env_vars:
+    volumes:
+      - pv_size: "5"
+        pv_path: "/"
+        pv_acess_mode: "ReadWriteOnce"
     routes:
       - name: "{{ app_name }}"
         hostname: "{{ app_name }}"
@@ -19,4 +23,3 @@ apps:
         path: ""
         certificate: ""
         external: True
-

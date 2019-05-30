@@ -1,10 +1,19 @@
 ---
-- name: "Template SVC"
-  template:
-    src: CreatePersistentVolume.j2
-    dest: CreatePersistentVolume.yml
+- name: "Capturando PV: {{ item.deploy_name }}"
+  command: kubectl get pv --namespace mediawiki -o json
+  register: pv
 
-- name: "Criando SVC: {{item.deploy_name}}"
-  k8s:
-    state: present
-    definition: "{{ lookup('file', 'CreatePersistentVolume.yml') | from_yaml }}"
+- name: "Importando tasks de criação de PV: {{ item.deploy_name }}"
+  include: files/main_create_pv.yml
+  #when: "(routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))"
+  with_items: "{{ item.volumes }}"
+  loop_control:
+    loop_var: volume
+
+- name: "Importando tasks de criação de PVC: {{ item.deploy_name }}"
+  include: files/main_create_pvc.yml
+  #when: "(volumes.pv_name not in volume|json_query('items[*].metadata.name')))"
+  #when: "(routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))"
+  with_items: "{{ item.volumes }}"
+  loop_control:
+    loop_var: volumes

@@ -1,6 +1,6 @@
 ---
 - name: "Verificando se o namespace {{ item.namespace }} existe"
-  shell: "kubectl get --no-headers=true namespaces -o custom-columns=:metadata.name"
+  command: "kubectl get --no-headers=true namespaces -o custom-columns=:metadata.name"
   register: namespace_list
 
 - name: "Create namespace: {{ item.namespace }}"
