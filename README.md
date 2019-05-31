@@ -19,6 +19,48 @@ This documentation presents how-to with Ansible to automate process deploy for a
 ---
 ### Deploy service - usign Helm
 
+#### deploy_vars example for non Helm services
+```
+namespace: "teste"
+app_name: "test"
+number_replicas: 1
+
+apps:
+  - name: "{{app_name}}"
+    deploy_name: "{{app_name}}"
+    group: "{{namespace}}"
+    image: "{{app_name}}"
+    helm: "True"
+    replicas: "{{number_replicas}}" # opcional
+    version: "" # when helm is True
+    chart: "" # when helm is True
+    repo: "" # when helm is True
+    env_vars:
+    volumes:
+      - pv_name: "volume_name"
+        pv_size: "5"
+        pv_path: "/"
+        pv_acess_mode: "ReadWriteOnce"
+    routes:
+      - name: "{{app_name}}"
+        hostname: "{{app_name}}-{{namespace}}"
+        port: "9200"
+        path: ""
+
+      - name: "{{app_name}}"
+        hostname: "{{app_name}}-{{namespace}}"
+        port: "9200"
+        path: "/teste"
+```
+
+#### Call
+
+```
+ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
+
+```
+
+---
 ### Deploy application
 
 #### deploy_vars example for non Helm services
@@ -32,18 +74,15 @@ apps:
     deploy_name: "{{app_name}}"
     group: "{{namespace}}"
     image: "{{app_name}}"
-    helm: "False/True"
+    helm: "False"
     replicas: "{{number_replicas}}" # opcional
-    version: "" # when helm is True
-    chart: "" # when helm is True
-    repo: "" # when helm is True
     routes:
       - name: "{{app_name}}"
         hostname: "{{app_name}}-{{namespace}}"
         port: "9200"
         path: ""
 
-      - name: "{{app_name}}2"
+      - name: "{{app_name}}"
         hostname: "{{app_name}}-{{namespace}}"
         port: "9200"
         path: "/teste"
