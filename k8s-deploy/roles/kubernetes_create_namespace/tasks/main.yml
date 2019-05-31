@@ -4,9 +4,9 @@
   register: namespace_list
 
 - name: "Create namespace: {{ item.namespace }}"
-  k8s:
-    name: "{{ item.namespace }}"
-    api_version: v1
-    kind: Namespace
-    state: present
+  command: "kubectl create namespace {{ item.namespace }}"
   when: "(item.namespace not in namespace_list.stdout_lines|list)"
+
+- name: "Aplicando patch node-selector: {{ item.group }}"
+  command: "kubectl patch namespace {{ item.namespace }} --patch '{\"metadata\": {\"annotations\": {\"kubernetes.io/node-selector\": \"region={{ region|lower }}\"}}}'"
+  when: "(item.group not in project_global.stdout_lines|list) and (region) and ((region|lower == 'qa') or (region|lower == 'dev'))"
