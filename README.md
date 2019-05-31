@@ -21,7 +21,7 @@ This documentation presents how-to with Ansible to automate process deploy for a
 
 ### Deploy application
 
-## deploy_vars example for non Helm services
+#### deploy_vars example for non Helm services
 ```
 namespace: "teste"
 app_name: "test"
@@ -53,7 +53,7 @@ apps:
       - "teste2=123"
 ```
 
-## Call
+#### Call
 
 ```
 ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
@@ -61,4 +61,4 @@ ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
 ```
 
 ---
-# Common issues
+### Common issues
