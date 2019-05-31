@@ -19,7 +19,7 @@ This documentation presents how-to with Ansible to automate process deploy for a
 ---
 ### Deploy service - usign Helm
 
-#### deploy_vars example for non Helm services
+#### deploy_vars example for Helm services
 ```
 namespace: "teste"
 app_name: "test"
