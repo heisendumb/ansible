@@ -1,19 +1,18 @@
 ---
-- name: "Capturando PV: {{ item.deploy_name }}"
-  command: kubectl get pv --namespace mediawiki -o json
+- name: "Capturando PVs: {{ item.namespace }}"
+  command: "kubectl get pv --namespace {{ item.namespace }} -o json"
   register: pv
 
-- name: "Importando tasks de criação de PV: {{ item.deploy_name }}"
+- name: "Importando tasks de criação de PV: {{ item.namespace }}/{{ item.deploy_name }}"
   include: files/main_create_pv.yml
-  #when: "(routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))"
+  when: "(volumes.pv_name not in pv|from_json|json_query('items[*].metadata.name')))"
   with_items: "{{ item.volumes }}"
   loop_control:
     loop_var: volume
 
-- name: "Importando tasks de criação de PVC: {{ item.deploy_name }}"
+- name: "Importando tasks de criação de PVC: {{ item.namespace }}/{{ item.deploy_name }}"
   include: files/main_create_pvc.yml
-  #when: "(volumes.pv_name not in volume|json_query('items[*].metadata.name')))"
-  #when: "(routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))"
+  when: "(volumes.pv_name not in pv|from_json|json_query('items[*].metadata.name')))"
   with_items: "{{ item.volumes }}"
   loop_control:
     loop_var: volumes
