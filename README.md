@@ -21,7 +21,7 @@ This documentation presents how-to with Ansible to automate process deploy for a
 
 This will deploy service using helm. All necessary requirements such as namespace, docker image, chart, env_vars, router e volume information will also be created using information contained into template.
 
-Below we can see template example to deployment service using helm.
+Below we can see template example for deployment service using helm.
 
 #### deploy_vars example for Helm services
 ```
