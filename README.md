@@ -17,7 +17,7 @@ This documentation presents how-to with Ansible to automate process deploy for a
 <!--te-->
 
 ---
-### Deploy service - usign Helm
+### Deploy service - Helm
 
 This will deploy service using helm. All necessary requirements such as namespace, docker image, chart, env_vars, router e volume information will also be created using information contained into template.
 
@@ -65,7 +65,7 @@ ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
 ```
 
 ---
-### Deploy application
+### Deploy application - non Helm
 
 #### deploy_vars example for non Helm services
 ```
