@@ -9,4 +9,4 @@
 
 - name: "Apply patch node-selector: {{ item.group }}"
   command: "kubectl patch namespace {{ item.namespace }} --patch '{\"metadata\": {\"annotations\": {\"kubernetes.io/node-selector\": \"region={{ region|lower }}\"}}}'"
-  when: "(item.group not in project_global.stdout_lines|list) and (region) and ((region|lower == 'qa') or (region|lower == 'dev'))"
+  when: "(item.group not in project_global.stdout_lines|list) and (region) and ((region|lower == 'prd') or (region|lower == 'dev'))"
