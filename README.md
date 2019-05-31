@@ -1,7 +1,27 @@
 # Ansible
 
-## deploy_vars arquivo exemplo
+This documentation presents how-to with Ansible to automate process to deploy applications (such as: python, rubygolang and java) or services (such as: mediawiki, sharelatex, grafana and etc....).
 
+* Bellow are the release versions of each software used in this project:
+  * Python v3.6.7
+  * Ansible v2.7.10
+  * Kubernetes v1.11.8
+  * kubectl v1.9.1
+  * Docker v1.13.1
+
+### Tabel of contents
+<!--ts-->
+ * [Deploy service - using Helm](#deploy-service-helm)
+ * [Deploy aplication](#deploy-application)
+ * [Common issues]($common-issues)
+<!--te-->
+
+---
+### Deploy service - usign Helm
+
+### Deploy application
+
+## deploy_vars example for non Helm services
 ```
 namespace: "teste"
 app_name: "test"
@@ -33,9 +53,12 @@ apps:
       - "teste2=123"
 ```
 
-## Chamada
+## Call
 
 ```
 ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
 
 ```
+
+---
+# Common issues
