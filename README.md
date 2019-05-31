@@ -1,6 +1,6 @@
 # Ansible
 
-This documentation presents how-to with Ansible to automate process to deploy applications (such as: python, rubygolang and java) or services (such as: mediawiki, sharelatex, grafana and etc....).
+This documentation presents how-to with Ansible to automate process deploy for applications (such as: python, rubygolang and java) or services (such as: mediawiki, sharelatex, grafana and etc....).
 
 * Bellow are the release versions of each software used in this project:
   * Python v3.6.7
