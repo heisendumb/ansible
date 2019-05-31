@@ -5,7 +5,7 @@
     dest: ServiceConfig.yml
   when: (item.routes is defined and item.routes) and (item.deploy_name in dc_app.stdout|from_json|json_query('metadata.labels.app') and ('helm' in item.keys()) and (item.helm == False)
 
-- name: "Criando SVC: {{item.deploy_name}}"
+- name: "Create SVC: {{item.deploy_name}}"
   k8s:
     state: present
     definition: "{{ lookup('file', 'ServiceConfig.yml') | from_yaml }}"

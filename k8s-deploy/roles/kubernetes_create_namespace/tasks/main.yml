@@ -1,5 +1,5 @@
 ---
-- name: "Verificando se o namespace {{ item.namespace }} existe"
+- name: "Check namespace {{ item.namespace }} exist"
   command: "kubectl get --no-headers=true namespaces -o custom-columns=:metadata.name"
   register: namespace_list
 

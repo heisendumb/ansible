@@ -4,7 +4,7 @@
     src: CreatePersistentVolume.j2
     dest: CreatePersistentVolume.yml
 
-- name: "Criando PV: {{item.deploy_name}}"
+- name: "Create PV: {{item.deploy_name}}"
   k8s:
     state: present
     definition: "{{ lookup('file', 'CreatePersistentVolume.yml') | from_yaml }}"

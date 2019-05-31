@@ -13,26 +13,26 @@
     - "{{ deploy_vars }}"
 
   tasks:
-    - name: "Acessando docker registry"
+    - name: "Login into docker registry"
       include_role:
         name: kubernetes_login
       when: docker_registry is defined
 
-    - name: "Criando Projeto"
+    - name: "Create project"
       include_role:
         name: kubernetes_create_namespace
       with_items: "{{ apps }}"
       vars:
         included_variable: "{{ item }}"
 
-    - name: "Criando App"
+    - name: "Create app"
       include_role:
         name: kubernetes_create_app
       with_items: "{{ apps }}"
       vars:
         included_variable: "{{ item }}"
 
-    - name: "Criando SRV"
+    - name: "Create service"
       include_role:
         name: kubernetes_create_srv
       with_items: "{{ apps }}"
@@ -40,14 +40,14 @@
         included_variable: "{{ item }}"
       when: ('helm' not in item.keys())
 
-    - name: "Criando rota"
+    - name: "Create route"
       include_role:
         name: kubernetes_create_route
       with_items: "{{ apps }}"
       vars:
         included_variable: "{{ item }}"
 
-    - name: "Update Variaveis."
+    - name: "Updating variables"
       include_role:
         name: kubernetes_update_vars
       with_items: "{{ apps }}"
@@ -55,7 +55,7 @@
       vars:
         included_variable: "{{ item }}"
 
-    - name: "Aplicando mudancas."
+    - name: "Applying changes"
       include_role:
         name: kubernetes_rollout
       with_items: "{{ apps }}"

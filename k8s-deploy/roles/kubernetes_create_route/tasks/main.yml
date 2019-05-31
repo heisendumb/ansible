@@ -1,9 +1,9 @@
 ---
-- name: "Capturando Ingress: {{ item.namespace }}"
+- name: "Get Ingress: {{ item.namespace }}"
   command: "kubectl get ing -o json -n {{ item.namespace }}"
   register: route
 
-- name: "Capturando a uma lista com todos os serviços: {{ item.namespace }}"
+- name: "Get a list with all services: {{ item.namespace }}"
   k8s_facts:
     api_key: "{{ token }}"
     api_version: v1
@@ -11,13 +11,13 @@
     namespace: "{{ item.namespace }}"
   register: svc_list
 
-- name: "Selecionando SVC especifico {{ item.group }}/{{ item.deploy_name }}"
+- name: "Select specific SVC {{ item.group }}/{{ item.deploy_name }}"
   k8s_route:
     services: "{{ svc_list }}"
     appname: "{{ item.deploy_name }}"
   register: specific_svc
 
-- name: "Verificando portas expostas"
+- name: "Check if ports are exposed"
   fail:
     msg: "Porta {{ routes.port }} nao exposta!!!"
   when: "(routes.port|int not in specific_svc.result|json_query('spec.ports[*].port') and item.deploy_name not in dc_app.stdout|from_json|json_query('metadata.labels.app'))"
@@ -25,7 +25,7 @@
   loop_control:
     loop_var: routes
 
-- name: "Template rota: {{ routes.name }}"
+- name: "Template route: {{ routes.name }}"
   template:
     src: CreateIngress.j2
     dest: CreateIngress.j2
@@ -34,7 +34,7 @@
   loop_control:
     loop_var: routes
 
-- name: "Criando rota: {{ routes.name }}"
+- name: "Create route: {{ routes.name }}"
   k8s:
     state: present
     definition: "{{ lookup('file', 'CreateIngress.j2') | from_yaml }}"

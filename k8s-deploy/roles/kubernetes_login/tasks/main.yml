@@ -1,5 +1,5 @@
 ---
-- name: "Login Docker registry: {{ docker_registry }}"
+- name: "Login into docker registry: {{ docker_registry }}"
   docker_login:
     registry: "{{ docker_registry }}"
     username: "{{ registry_username }}"

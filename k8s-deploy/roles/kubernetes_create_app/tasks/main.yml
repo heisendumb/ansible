@@ -1,5 +1,5 @@
 ---
-- name: "Capturando Deployment: {{ item.deploy_name }}"
+- name: "Get Deployment: {{ item.deploy_name }}"
   command: "kubectl get deployments -o json -n {{ item.namespace }}"
   register: dc_global
 
@@ -45,7 +45,7 @@
   debug:
     var: new_app_true
 
-- name: "Template DC para new app: {{ item.namespace }}/{{ item.deploy_name}}"
+- name: "Template DC for new app: {{ item.namespace }}/{{ item.deploy_name}}"
   template:
     src: DeploymentConfig.j2
     dest: DeploymentConfig.yml
@@ -58,12 +58,12 @@
   register: new_app_true
   when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and ('helm' in item.keys()) and (item.helm == False)
 
-- name: "Capturando Deployment: {{ item.deploy_name }}"
+- name: "Get Deployment: {{ item.deploy_name }}"
   command: "kubectl get deployments/{{ item.deploy_name }} -o json -n {{ item.namespace }}"
   register: dc_app
   when: ('helm' in item.keys()) and (item.helm == False)
 
-- name: "Capturando Deployment - Helm: {{item.deploy_name}}-{{ item.deploy_name }}"
+- name: "Get Deployment - Helm: {{item.deploy_name}}-{{ item.deploy_name }}"
   command: "kubectl get deployments/{{ item.deploy_name }}-{{ item.deploy_name }} -o json -n {{ item.namespace }}"
   register: dc_app
   when: ('helm' in item.keys()) and (item.helm == True)

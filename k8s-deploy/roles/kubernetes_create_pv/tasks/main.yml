@@ -1,20 +1,20 @@
 ---
-- name: "Capturando PVs: {{ item.namespace }}"
+- name: "Get PVs: {{ item.namespace }}"
   command: "kubectl get pv --namespace {{ item.namespace }} -o json"
   register: pv
 
-- name: "Capturando PVs: {{ item.namespace }}"
+- name: "Get PVs: {{ item.namespace }}"
   command: "kubectl get pvc --namespace {{ item.namespace }} -o json"
   register: pvc
 
-- name: "Importando tasks de criação de PV: {{ item.namespace }}/{{ item.deploy_name }}"
+- name: "Import tasks to create PV: {{ item.namespace }}/{{ item.deploy_name }}"
   include: files/main_create_pv.yml
   when: "(volumes.pv_name not in pv|from_json|json_query('items[*].metadata.name')))"
   with_items: "{{ item.volumes }}"
   loop_control:
     loop_var: volume
 
-- name: "Importando tasks de criação de PVC: {{ item.namespace }}/{{ item.deploy_name }}"
+- name: "Import tasks to create PVC: {{ item.namespace }}/{{ item.deploy_name }}"
   include: files/main_create_pvc.yml
   when: "(volumes.pv_name not in pvc|from_json|json_query('items[*].metadata.name')))"
   with_items: "{{ item.volumes }}"
