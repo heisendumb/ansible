@@ -1,4 +1,5 @@
 ---
+
 # Ansible
 
 This documentation presents how-to with Ansible to automate process deploy for applications (such as: python, rubygolang and java) or services (such as: mediawiki, sharelatex, grafana and etc....).
@@ -16,9 +17,10 @@ This documentation presents how-to with Ansible to automate process deploy for a
 - [Deploy service - using Helm](#deploy-service-helm)
 - [Deploy aplication](#deploy-application)
 - [Common issues]($common-issues)
-  <!--te-->
+<!--te-->
 
 ---
+
 ### Deploy service - Helm
 
 This will deploy service using helm. All necessary requirements such as namespace, docker image, chart, env_vars, router e volume information will also be created using information contained into template.
