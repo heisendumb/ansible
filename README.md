@@ -1,5 +1,3 @@
----
-
 # Ansible
 
 This documentation presents how-to with Ansible to automate process deploy for applications (such as: python, rubygolang and java) or services (such as: mediawiki, sharelatex, grafana and etc....).
@@ -72,6 +70,7 @@ ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
 ```
 
 ---
+
 ### Deploy application - non Helm
 
 This will deploy application on k8s. All necessary requirements such as namespace, docker images, env_vars, router e volume information will also be created using information contained into template.
@@ -109,7 +108,6 @@ apps:
 #### Call
 
 This call will deploy application using template above. Target flag is to set which k8s cluster will depoy your aplication.
-
 
 ```
 ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
