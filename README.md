@@ -1,20 +1,22 @@
+---
 # Ansible
 
 This documentation presents how-to with Ansible to automate process deploy for applications (such as: python, rubygolang and java) or services (such as: mediawiki, sharelatex, grafana and etc....).
 
-* Bellow are the release versions of each software used in this project:
-  * Python v3.6.7
-  * Ansible v2.7.10
-  * Kubernetes v1.11.8
-  * kubectl v1.9.1
-  * Docker v1.13.1
+- Bellow are the release versions of each software used in this project:
+  - Python v3.6.7
+  - Ansible v2.7.10
+  - Kubernetes v1.11.8
+  - kubhttps://meet.google.com/_meet/dcq-etap-zed?hl=pt-BR&authuser=1ectl v1.9.1
+  - Docker v1.13.1
 
 ### Tabel of contents
+
 <!--ts-->
- * [Deploy service - using Helm](#deploy-service-helm)
- * [Deploy aplication](#deploy-application)
- * [Common issues]($common-issues)
-<!--te-->
+- [Deploy service - using Helm](#deploy-service-helm)
+- [Deploy aplication](#deploy-application)
+- [Common issues]($common-issues)
+  <!--te-->
 
 ---
 ### Deploy service - Helm
@@ -24,6 +26,7 @@ This will deploy service using helm. All necessary requirements such as namespac
 Below we can see template example for deployment service using helm.
 
 #### deploy_vars example for Helm services
+
 ```
 namespace: "teste"
 app_name: "test"
@@ -59,6 +62,8 @@ apps:
 
 #### Call
 
+This call will deploy a aplication using template above. Target flag is to set which k8s cluster will deploy your aplication.
+
 ```
 ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
 
@@ -67,7 +72,10 @@ ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
 ---
 ### Deploy application - non Helm
 
+This will deploy application on k8s. All necessary requirements such as namespace, docker images, env_vars, router e volume information will also be created using information contained into template.
+
 #### deploy_vars example for non Helm services
+
 ```
 namespace: "teste"
 app_name: "test"
@@ -87,7 +95,7 @@ apps:
         path: ""
 
       - name: "{{app_name}}"
-        hostname: "{{app_name}}-{{namespace}}"
+	hostname: "{{app_name}}-{{namespace}}"
         port: "9200"
         path: "/teste"
 
@@ -98,10 +106,14 @@ apps:
 
 #### Call
 
+This call will deploy application using template above. Target flag is to set which k8s cluster will depoy your aplication.
+
+
 ```
 ansible-playbook site.yml -e deploy_vars=arquivo.yml -e target=ENVIRONMENT
 
 ```
 
 ---
+
 ### Common issues
