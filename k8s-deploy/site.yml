@@ -51,7 +51,7 @@
       include_role:
         name: kubernetes_update_vars
       with_items: "{{ apps }}"
-      when: "(not((item.env_vars is undefined) or (item.env_vars is none) or (item.env_vars|trim == '')) and (('helm' not in item.keys()) and (item.helm is False)))"
+      when: "not((item.env_vars is undefined) or (item.env_vars is none) or (item.env_vars|trim == ''))  and ('helm' not in item.keys()) and not(item.helm)"
       vars:
         included_variable: "{{ item }}"
 
