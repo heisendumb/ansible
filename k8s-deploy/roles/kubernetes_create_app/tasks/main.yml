@@ -1,5 +1,5 @@
 ---
-- name: "Get Deployment: {{ item.deploy_name }}"
+- name: "Get deployment: {{ item.deploy_name }}"
   command: "kubectl get deployments -o json -n {{ item.namespace }}"
   register: dc_global
 
@@ -7,7 +7,7 @@
     tun_pid_file: /tmp/helm_pid
 
 - block:
-    - name: set up a tunnel to tiller
+    - name: "Set up a tunnel to tiller"
       shell: |
         tiller_pod="$(kubectl get pod -l app=helm,name=tiller --namespace kube-system -o name|cut -d/ -f2)"
         nohup kubectl port-forward "$tiller_pod" 44134:44134 --namespace kube-system </dev/null >/dev/null 2>&1 &
@@ -21,7 +21,7 @@
         helm install {{ item.repo }}/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }} {% if ('helm' in item.keys()) and (item.env_vars is not none) %} -f {{ item.env_vars }} {% endif %}
 
   always:
-    - name: tear down the tunnel to tiller
+    - name: "Tear down the tunnel to tiller"
       shell: |
         kill "$(cat {{ tun_pid_file|quote }})" || true
         rm -f {{ tun_pid_file|quote }}
@@ -30,7 +30,7 @@
       changed_when: false
   when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and ('helm' in item.keys()) and (item.helm)
 
-- name: "Template DC for new app: {{ item.namespace }}/{{ item.deploy_name}}"
+- name: "Template deployment for new app: {{ item.namespace }}/{{ item.deploy_name}}"
   template:
     src: DeploymentConfig.j2
     dest: DeploymentConfig.yml
@@ -43,12 +43,12 @@
   register: new_app_true
   when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and ('helm' in item.keys()) and not(item.helm)
 
-- name: "Get Deployment: {{ item.deploy_name }}"
+- name: "Get deployment: {{ item.deploy_name }}"
   command: "kubectl get deployments/{{ item.deploy_name }} -o json -n {{ item.namespace }}"
   register: dc_app
   when: ('helm' in item.keys()) and not(item.helm)
 
-- name: "Get Deployment - Helm: {{item.deploy_name}}-{{ item.deploy_name }}"
+- name: "Get deployment - Helm: {{item.deploy_name}}-{{ item.deploy_name }}"
   command: "kubectl get deployments/{{ item.deploy_name }}-{{ item.deploy_name }} -o json -n {{ item.namespace }}"
   register: dc_app
   when: ('helm' in item.keys()) and (item.helm)

@@ -1,5 +1,5 @@
 ---
-- name: "Get DC: {{ item.namespace }}/{{ item.deploy_name }}"
+- name: "Get deployment: {{ item.namespace }}/{{ item.deploy_name }}"
   command: "kubectl get deploy -o json -n {{ item.namespace }}"
   register: dc_global
 
@@ -7,6 +7,7 @@
   command: "kubectl set image deploymeny/{{ item.deploy_name }} {{ item.deploy_name }}={{ item.image }}"
   when: (new_app_true is skipped) and (item.deploy_name in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and (('helm' not in item.keys()) and not(item.helm))
 
-#- name: "Updating image and all variables when setup using Helm: {{ item.namespace }}/{{ item.deploy_name }}"
-#  command: "helm upgrade {{ item.repo }}/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }} {% if ('helm' in item.keys()) and (item.env_vars is not none) %} -f {{ item.env_vars }} {% endif %}"
-#  when: (item.deploy_name in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and (('helm' in item.keys()) and (item.helm))
+- name: "Updating image and all variables when setup using Helm: {{ item.namespace }}/{{ item.deploy_name }}"
+  command: |
+    helm upgrade {{ item.name }}  {{ item.repo }}/{{ item.deploy_name }} --namespace {{ item.namespace }} {% if ('helm' in item.keys()) and (item.env_vars is not none) %} -f {{ item.env_vars }} {% endif %}
+  when: (item.deploy_name in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and (('helm' in item.keys()) and (item.helm))

@@ -1,5 +1,5 @@
 ---
-- name: "Get Ingress: {{ item.namespace }}"
+- name: "Get ingresses: {{ item.namespace }}"
   command: "kubectl get ing -o json -n {{ item.namespace }}"
   register: route
 

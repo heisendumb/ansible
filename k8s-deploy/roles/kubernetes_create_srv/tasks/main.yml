@@ -1,11 +1,11 @@
 ---
-- name: "Template SVC"
+- name: "Template service"
   template:
     src: ServiceConfig.j2
     dest: ServiceConfig.yml
   when: (item.routes is defined and item.routes) and (item.deploy_name in dc_app.stdout|from_json|json_query('metadata.labels.app') and ('helm' in item.keys()) and not(item.helm)
 
-- name: "Create SVC: {{item.deploy_name}}"
+- name: "Create service: {{item.deploy_name}}"
   k8s:
     state: present
     definition: "{{ lookup('file', 'ServiceConfig.yml') | from_yaml }}"
