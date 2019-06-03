@@ -1,27 +1,31 @@
 apiVersion: v1
 kind: Deployment
 metadata:
-    label:
+    labels:
         app: "{{ item.deploy_name }}" 
+        deployment: "{{ item.deploy_name }}"
     name: "{{ item.deploy_name }}"
-    namespace: "{{ item.group }}"
+    namespace: "{{ item.namespace }}"
 spec:
   {% if item.replicas is defined %}
       
-    replicas: "{{ item.replicas }}"
+    replicas: {{ item.replicas }}
   {% else %}
       
     replicas: 1
   {% endif %}
     
     strategy:
-        type: "Rolling"
+        type: "RollingUpdate"
     selector:
-        app: "{{ item.deploy_name }}" 
+      matchLabels:
+        app: "{{ item.deploy_name }}"
+        deployment: "{{ item.deploy_name }}"
     template:
         metadata:
             labels:
-                app: "{{ item.deploy_name }}"
+              app: "{{ item.deploy_name }}"
+              deployment: "{{ item.deploy_name }}"
         spec:
             containers:
                 - name: "{{ item.deploy_name }}"
@@ -52,6 +56,22 @@ spec:
                   {% endif %}
                   {% endif %}
 
+                  {% if item.volume is defined %}
+
+                  {% if item.volume is not none %}
+
+                  {% for key in item.volume %}
+
+                  {% if key.localPath is not none %}
+
+                   volumeMounts:
+                    - mountPath: {{ key.localPath }}
+                      name: {{ key.pv_name }}
+                  {% endif %}
+                  {% endfor %}
+                  {% endif %}
+                  {% endif %}
+
                   resources:        
                     limits:
                       {% if 'cpu' in item.keys() %}
@@ -68,6 +88,7 @@ spec:
 
                       memory: {{ memory.max }}Mi
                       {% endif %}
+
                     requests:
                       {% if 'cpu' in item.keys() %}
                       
@@ -83,3 +104,20 @@ spec:
 
                       memory: {{ memory.min }}Mi
                       {% endif %}
+                      
+          {% if item.volume is defined %}
+
+          {% if item.volume is not none %}
+
+          {% for key in item.volume %}
+
+          {% if key.localPath is not none %}
+          
+          volumes:
+            - name: {{ key.pv_name }}
+              persistentVolumeClaim:
+                claimName: {{ key.pv_name }}
+          {% endif %}
+          {% endfor %}
+          {% endif %}
+          {% endif %}

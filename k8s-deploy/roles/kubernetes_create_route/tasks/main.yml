@@ -28,7 +28,7 @@
 - name: "Template route: {{ routes.name }}"
   template:
     src: CreateIngress.j2
-    dest: CreateIngress.j2
+    dest: CreateIngress.yml
   when: (item.deploy_name in dc_app.stdout|from_json|json_query('metadata.labels.app') and routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))
   with_items: "{{ item.routes }}"
   loop_control:
@@ -37,7 +37,7 @@
 - name: "Create route: {{ routes.name }}"
   k8s:
     state: present
-    definition: "{{ lookup('file', 'CreateIngress.j2') | from_yaml }}"
+    definition: "{{ lookup('file', 'CreateIngress.yml') | from_yaml }}"
   when: (item.deploy_name in dc_app.stdout|from_json|json_query('metadata.labels.app') and routes.name not in route.stdout|from_json|json_query('items[*].metadata.name'))
   with_items: "{{ item.routes }}"
   loop_control:

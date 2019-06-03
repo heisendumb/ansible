@@ -1,25 +1,65 @@
-group: "mediawiki"
-app_name: "mediawiki"
 number_replicas: 1
 
 apps:
-  - name: "{{ app_name }}"
-    deploy_name: "{{ app_name }}"
-    namespace: "{{ group }}"
+  - name: "mongo"
+    deploy_name: "mongo"
+    namespace: "sharelatex-prd"
     replicas: "{{ number_replicas }}"
-    helm: True
-    version: "6.2.0"
-    chart: "https://kubernetes-charts.storage.googleapis.com"
-    repo: "stable"
+    image: mongo
     env_vars:
     volumes:
-      - pv_size: "5"
+      - pv_name: "sharelatex-mongo-base"
+        pv_size: "5"
         pv_path: "/"
         pv_acess_mode: "ReadWriteOnce"
     routes:
-      - name: "{{ app_name }}"
-        hostname: "{{ app_name }}"
-        port: "443"
+      - name: "mongo"
+        hostname: "mongo-sharelatex"
+        port: "27017"
+        path: ""
+        certificate: ""
+        external: True
+
+  - name: "redis"
+    deploy_name: "redis"
+    namespace: "sharelatex-prd"
+    replicas: "{{ number_replicas }}"
+    image: redis
+    env_vars:
+    volumes:
+      - pv_name: "sharelatex-redis-base"
+        pv_size: "8"
+        pv_path: "/"
+        pv_acess_mode: "ReadWriteOnce"
+    routes:
+      - name: "redis"
+        hostname: "redis-sharelatex"
+        port: "6379"
+        path: ""
+        certificate: ""
+        external: True  
+
+  - name: "sharelatex"
+    deploy_name: "sharelatex"
+    namespace: "sharelatex-prd"
+    replicas: "{{ number_replicas }}"
+    image: sharelatex/sharelatex
+    env_vars:
+    cpu:
+      min: 1
+      max: 6
+    memory:
+      min: 3072
+      max: 6144
+    volumes:
+      - pv_name: "sharelatex-sharelatex-arquivos"
+        pv_size: "10"
+        pv_path: "/"
+        pv_acess_mode: "ReadWriteOnce"
+    routes:
+      - name: "sharelatex"
+        hostname: "sharelatex"
+        port: "80"
         path: ""
         certificate: ""
         external: True

@@ -5,7 +5,7 @@
 
 - name: "Updating image in deployment: {{ item.namespace }}/{{ item.deploy_name }}"
   command: "kubectl set image deploymeny/{{ item.deploy_name }} {{ item.deploy_name }}={{ item.image }}"
-  when: (new_app_true is skipped) and (item.deploy_name in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and (('helm' not in item.keys()) and not(item.helm))
+  when: (new_app_true is skipped) and (item.deploy_name in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and (('helm' not in item.keys())
 
 - name: "Updating image and all variables when setup using Helm: {{ item.namespace }}/{{ item.deploy_name }}"
   command: |
