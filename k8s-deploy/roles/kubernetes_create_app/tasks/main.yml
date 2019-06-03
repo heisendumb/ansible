@@ -8,7 +8,7 @@
 
 - block:
     - name: set up a tunnel to tiller
-      command: |
+      shell: |
         tiller_pod="$(kubectl get pod -l app=helm,name=tiller --namespace kube-system -o name|cut -d/ -f2)"
         nohup kubectl port-forward "$tiller_pod" 44134:44134 --namespace kube-system </dev/null >/dev/null 2>&1 &
         echo "$!" >{{ tun_pid_file|quote }}
@@ -19,31 +19,16 @@
     - name: "New-srv: {{ item.namespace }}/{{ item.deploy_name }}"
       command: |
         helm install {{ item.repo }}/{{ item.deploy_name }} --namespace {{ item.namespace }} --name {{ item.name }} {% if ('helm' in item.keys()) and (item.env_vars is not none) %} -f {{ item.env_vars }} {% endif %}
-      #helm:
-      #  host: localhost
-      #  chart:
-      #    name: "{{ item.pkg_name }}"
-      #    version: "{{ item.pkg_version }}"
-      #    source:
-      #      type: repo
-      #      location: "{{ item.chart_url}}"
-      #  state: present
-      #  name: "{{ item.deploy_name }}"
-      #  namespace: "{{ item.namespace }}"
 
   always:
     - name: tear down the tunnel to tiller
-      command: |
+      shell: |
         kill "$(cat {{ tun_pid_file|quote }})" || true
         rm -f {{ tun_pid_file|quote }}
       args:
         removes: "{{ tun_pid_file }}"
       changed_when: false
   when: (item.deploy_name not in dc_global.stdout|from_json|json_query('items[*].metadata.labels.app')) and ('helm' in item.keys()) and (item.helm == True)
-
-- name: "Debug"
-  debug:
-    var: new_app_true
 
 - name: "Template DC for new app: {{ item.namespace }}/{{ item.deploy_name}}"
   template:
