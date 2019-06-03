@@ -6,7 +6,8 @@ This documentation presents how-to with Ansible to automate process deploy for a
   - Python v3.6.7
   - Ansible v2.7.10
   - Kubernetes v1.11.8
-  - kubhttps://meet.google.com/_meet/dcq-etap-zed?hl=pt-BR&authuser=1ectl v1.9.1
+  - kubctl v1.9.1
+  - Helm v2.13.1
   - Docker v1.13.1
 
 ### Tabel of contents
