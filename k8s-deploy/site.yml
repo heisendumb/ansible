@@ -36,10 +36,10 @@
       include_role:
         name: kubernetes_create_srv
       with_items: "{{ apps }}"
+      when: ('helm' not in item.keys())
       vars:
         included_variable: "{{ item }}"
-      when: ('helm' not in item.keys())
-
+      
     - name: "Create route"
       include_role:
         name: kubernetes_create_route
@@ -51,7 +51,7 @@
       include_role:
         name: kubernetes_update_vars
       with_items: "{{ apps }}"
-      when: "not((item.env_vars is undefined) or (item.env_vars is none) or (item.env_vars|trim == ''))  and ('helm' not in item.keys()) and not(item.helm)"
+      when: "not((item.env_vars is undefined) or (item.env_vars is none) or (item.env_vars|trim == '')) and ('helm' not in item.keys()) and not(item.helm)"
       vars:
         included_variable: "{{ item }}"
 

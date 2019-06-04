@@ -5,7 +5,7 @@ apps:
     deploy_name: "mongo"
     namespace: "sharelatex-prd"
     replicas: "{{ number_replicas }}"
-    image: mongo
+    image: mongo:latest
     env_vars:
     volumes:
       - pv_name: "sharelatex-mongo-base"
@@ -24,7 +24,7 @@ apps:
     deploy_name: "redis"
     namespace: "sharelatex-prd"
     replicas: "{{ number_replicas }}"
-    image: redis
+    image: redis:latest
     env_vars:
     volumes:
       - pv_name: "sharelatex-redis-base"
@@ -43,7 +43,7 @@ apps:
     deploy_name: "sharelatex"
     namespace: "sharelatex-prd"
     replicas: "{{ number_replicas }}"
-    image: sharelatex/sharelatex
+    image: sharelatex:latest
     env_vars:
     cpu:
       min: 1
