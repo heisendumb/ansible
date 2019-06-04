@@ -25,6 +25,13 @@
       vars:
         included_variable: "{{ item }}"
 
+    - name: "Create volume"
+      include_role:
+        name: kubernetes_create_volume
+      with_items: "{{ apps }}"
+      vars:
+        included_variable: "{{ item }}"
+
     - name: "Create app"
       include_role:
         name: kubernetes_create_app
