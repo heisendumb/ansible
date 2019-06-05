@@ -9,14 +9,14 @@
 
 - name: "Import tasks to create PV: {{ item.namespace }}/{{ item.deploy_name }}"
   include: files/main_create_pv.yml
-  when: "(volumes.pv_name not in pv|from_json|json_query('items[*].metadata.name'))"
+  when: "volumes.pv_name not in pv|from_json|json_query('items[*].metadata.name')"
   with_items: "{{ item.volumes }}"
   loop_control:
-    loop_var: volume
+    loop_var: volumes
 
 - name: "Import tasks to create PVC: {{ item.namespace }}/{{ item.deploy_name }}"
   include: files/main_create_pvc.yml
-  when: "(volumes.pv_name not in pvc|from_json|json_query('items[*].metadata.name'))"
+  when: "volumes.pv_name not in pvc|from_json|json_query('items[*].metadata.name')"
   with_items: "{{ item.volumes }}"
   loop_control:
     loop_var: volumes

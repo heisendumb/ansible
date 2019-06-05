@@ -1,0 +1,13 @@
+kind: Ingress
+apiVersion: extensions/v1beta1
+metadata:
+  name: sharelatex
+  namespace: sharelatex-prd
+spec:
+  rules:
+    - http:
+        paths:
+          - path: 
+            backend:
+              serviceName: sharelatex
+              servicePort: 80

@@ -29,6 +29,7 @@
       include_role:
         name: kubernetes_create_volume
       with_items: "{{ apps }}"
+      when: "not((item.volumes is undefined) or (item.volumes is none) or (item.volumes|trim == ''))"
       vars:
         included_variable: "{{ item }}"
 
@@ -46,7 +47,7 @@
       when: ('helm' not in item.keys())
       vars:
         included_variable: "{{ item }}"
-      
+
     - name: "Create route"
       include_role:
         name: kubernetes_create_route
